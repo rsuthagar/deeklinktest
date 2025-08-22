@@ -154,30 +154,42 @@
                             console.error('Failed to write to clipboard:', err);
                         });
 
-                        let openedApp = false;
-                        const onVis = () => {
-                            if (document.visibilityState === 'hidden') openedApp = true;
-                        };
+                    let openedApp = false;
+                    let triedToOpenApp = false;
+                    let tryingToOpenAppStore = false;
 
-                        const onPageHide = () => {
-                            openedApp = true;
-                        };
-						
-                        document.addEventListener('visibilitychange', onVis, { once: true });
-                        window.addEventListener('pagehide', onPageHide, { once: true });
-						
-                        window.location = `synaottlink${iosAppId}://${encodeURIComponent(referrer)}`;                        
+                    const onVis = () => {
+                        if (document.visibilityState === 'hidden') openedApp = true;
+                    };
+
+                    const onPageHide = () => {
+                        openedApp = true;
+                    };
+
+                    const onBlur = () => {
+                        // when I get blur event while trying to open the app then it means the app is installed
+                        // otherwise, blur is invoked when the code tries to open the app store.
+                        if (triedToOpenApp == false) openedApp = true;
+                    };
+
+                    document.addEventListener('visibilitychange', onVis, { once: true });
+                    window.addEventListener('pagehide', onPageHide, { once: true });
+                    window.addEventListener('blur', onBlur, { once: true });
+
+                    window.location = `synaottlink${iosAppId}://${encodeURIComponent(referrer)}`;                        
+                    triedToOpenApp = true;
+
+                    window.setTimeout(function(){
+                        document.removeEventListener('visibilitychange', onVis);
+                        window.removeEventListener('pagehide', onPageHide);
+                        window.removeEventListener('blur', onBlur);
                         
-                        window.setTimeout(function(){
-							document.removeEventListener('visibilitychange', onVis);
-                            window.removeEventListener('pagehide', onPageHide);
+                        if (openedApp) { //link is already opened in the app. No need to redirect to App Store
+                            return;
+                        }
 
-                            if (openedApp) { //link is already opened in the app. No need to redirect to App Store
-                                return;
-                            }
-
-                            window.location = appStoreUrl;
-                        },2000);
+                        window.location = appStoreUrl;
+                    },2000);
                 };
                 document.body.appendChild(agreeButton);
             } else if (isBrowser()) {

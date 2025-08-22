@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${WEBPAGE_TITLE}</title>
+    <meta property='og:image:width' content='640' />
+    <meta property='og:image:height' content='640' />
+    <meta name='twitter:card' content='summary_large_image' />
+    <meta name='twitter:site' content='${FULL_URL}' />
+    <meta property='og:url' content='${FULL_URL}' />
+    ${META_TAGS}
+    ${BRANDING_STYLE}
+</head>
+<body>
+<script type="module">
+    (function() {
+        // Device detection functions
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
+
+        function isIOS() {
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                // iPadOS 13+ pretends to be Mac, but has touch support
+                (navigator.userAgent.includes('Macintosh') && 'ontouchend' in document);
+        }
+
+        function isBrowser() {
+            return (typeof window !== "undefined" && typeof document !== "undefined");
+        }
+
+        window.setTimeout(function () {
+            // Redirect logic
+            if (isAndroid()) {
+                // ssr - androidPackageName need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
+                const androidPackageName = '${ANDROID_PACKAGE_NAME}'; // <-- Replace with your Android app's package name
+                const referrer = `${FULL_URL}` // <-- full url
+                const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackageName}&referrer=${encodeURIComponent(referrer)}`;
+                window.location.href = playStoreUrl;
+
+            } else if (isIOS()) {
+                // ssr - iosAppId need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
+                const iosAppId = '${IOS_APP_STORE_ID}'; // <-- Replace with your iOS app's App Store ID
+                const appStoreUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
+                const referrer = `${FULL_URL}`; // `${referrer}` // <-- full url
+
+                const divElement = document.createElement('div');
+                divElement.classList.add('text-container');
+                const reasonText = document.createElement('p');
+                reasonText.classList.add('text');
+                // ssr - the text and styling need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
+                reasonText.textContent = 'Open link in app?';
+                divElement.appendChild(reasonText);
+                document.body.appendChild(divElement);
+
+                const agreeButton = document.createElement('button');
+                // ssr - Same as text. The button styling, title need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
+                agreeButton.textContent = 'OPEN';
+                agreeButton.onclick = function() {
+                    // Redirect to the App Store and write to clipboard
+                    navigator.clipboard.writeText(`referrer=${encodeURIComponent(referrer)}`)
+                        .then(() => {
+                            console.log(`Written to device clipboard - referrer=${encodeURIComponent(referrer)}`);
+                        })
+                        .catch(err => {
+                            console.error('Failed to write to clipboard:', err);
+                        });
+
+                        let openedApp = false;
+                        const onVis = () => {
+                            if (document.visibilityState === 'hidden') openedApp = true;
+                        };
+
+                        const onPageHide = () => {
+                            openedApp = true;
+                        };
+						
+                        document.addEventListener('visibilitychange', onVis, { once: true });
+                        window.addEventListener('pagehide', onPageHide, { once: true });
+						
+                        window.location = `synaottlink${iosAppId}://${encodeURIComponent(referrer)}`;                        
+                        
+                        window.setTimeout(function(){
+							document.removeEventListener('visibilitychange', onVis);
+                            window.removeEventListener('pagehide', onPageHide);
+
+                            if (openedApp) { //link is already opened in the app. No need to redirect to App Store
+                                return;
+                            }
+
+                            window.location = appStoreUrl;
+                        },2000);
+                };
+                document.body.appendChild(agreeButton);
+            } else if (isBrowser()) {
+                // For desktop
+                const desktopFallback = `https://${WEB_UI_HOST}/campaign_management?${QUERY_PARAMS_FROM_FULL_URL}`; // <-- Replace with Web UI host and query params from the full URL
+                window.location = desktopFallback;
+            } else {
+                document.body.innerHTML = '<p>This link is intended for Android or iOS device or Chrome, Firefox and Safari web browsers. Please open it on a compatible device.</p>';
+            }
+        }, 1000);
+    })();
+
+</script>
+</body>
+</html>

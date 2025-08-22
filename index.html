@@ -111,7 +111,12 @@
                     window.addEventListener('pagehide', onPageHide, { once: true });
 //                    window.addEventListener('blur', onBlur, { once: true });
 
-                    window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;                        
+                    try{
+                        window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;                        
+                    }
+                    catch{
+                        console.error('Deep link navigation failed');
+                    }
                 },100);
 
                 window.setTimeout(function(){

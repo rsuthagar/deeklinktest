@@ -109,7 +109,7 @@
                     
                     document.addEventListener('visibilitychange', onVis, { once: true });
                     window.addEventListener('pagehide', onPageHide, { once: true });
-                    window.addEventListener('blur', onBlur, { once: true });
+//                    window.addEventListener('blur', onBlur, { once: true });
 
                     window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;                        
                 },100);
@@ -117,7 +117,7 @@
                 window.setTimeout(function(){
                     document.removeEventListener('visibilitychange', onVis);
                     window.removeEventListener('pagehide', onPageHide);
-                    window.removeEventListener('blur', onBlur);
+//                    window.removeEventListener('blur', onBlur);
 
                     if (openedApp) { //link is already opened in the app. No need to redirect to App Store
                         return;

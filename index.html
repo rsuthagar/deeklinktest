@@ -1,20 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${WEBPAGE_TITLE}</title>
-    <meta property='og:image:width' content='640' />
-    <meta property='og:image:height' content='640' />
-    <meta name='twitter:card' content='summary_large_image' />
-    <meta name='twitter:site' content='${FULL_URL}' />
-    <meta property='og:url' content='${FULL_URL}' />
-    ${META_TAGS}
-    ${BRANDING_STYLE}
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title></title>
+	<meta property='og:image:width' content='640' />
+	<meta property='og:image:height' content='640' />
+	<meta name='twitter:card' content='summary_large_image' />
+	<meta name='twitter:site'
+		content='https://links-astrostgeks.vsscloud-astro-stg.tv.s3.ap-southeast-1.amazonaws.com/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod' />
+	<meta property='og:url'
+		content='https://links-astrostgeks.vsscloud-astro-stg.tv.s3.ap-southeast-1.amazonaws.com/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod' />
+
+	<style>
+		body {
+			position: relative;
+			height: 100vh;
+		}
+
+		.text-container {
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+		}
+
+		.text {
+			font-weight: 600;
+			font-size: 20px;
+			margin-bottom: 50px;
+		}
+
+		button {
+			position: relative;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			padding: 10px 24px;
+			background-color: white;
+			border: 1px solid #d1d1d1;
+			border-radius: 3px;
+			color: #007aff;
+			font-weight: 600;
+			font-size: 16px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.40);
+			cursor: pointer;
+			outline: none;
+			transition: background-color 0.2s ease;
+		}
+	</style>
 </head>
+
 <body>
-<script type="module">
-    (function() {
+	<script type="module">
+		(function() {
         // Device detection functions
         function isAndroid() {
             return /Android/i.test(navigator.userAgent);
@@ -34,16 +72,18 @@
             // Redirect logic
             if (isAndroid()) {
                 // ssr - androidPackageName need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
-                const androidPackageName = '${ANDROID_PACKAGE_NAME}'; // <-- Replace with your Android app's package name
-                const referrer = `${FULL_URL}` // <-- full url
+                const androidPackageName = 'com.astro.astro'; // <-- Replace with your Android app's package name
+                const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod` // <-- full url
                 const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackageName}&referrer=${encodeURIComponent(referrer)}`;
-                window.location.href = playStoreUrl;
+//                window.location.href = playStoreUrl;
+
+                window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;
 
             } else if (isIOS()) {
                 // ssr - iosAppId need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
-                const iosAppId = '${IOS_APP_STORE_ID}'; // <-- Replace with your iOS app's App Store ID
+                const iosAppId = '521993797'; // <-- Replace with your iOS app's App Store ID
                 const appStoreUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
-                const referrer = `${FULL_URL}`; // `${referrer}` // <-- full url
+                const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod`; // `${referrer}` // <-- full url
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
@@ -95,7 +135,7 @@
                 document.body.appendChild(agreeButton);
             } else if (isBrowser()) {
                 // For desktop
-                const desktopFallback = `https://${WEB_UI_HOST}/campaign_management?${QUERY_PARAMS_FROM_FULL_URL}`; // <-- Replace with Web UI host and query params from the full URL
+                const desktopFallback = `https://web.astro-stg.com/campaign_management?`; // <-- Replace with Web UI host and query params from the full URL
                 window.location = desktopFallback;
             } else {
                 document.body.innerHTML = '<p>This link is intended for Android or iOS device or Chrome, Firefox and Safari web browsers. Please open it on a compatible device.</p>';
@@ -105,4 +145,5 @@
 
 </script>
 </body>
+
 </html>

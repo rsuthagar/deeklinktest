@@ -112,7 +112,9 @@
 //                    window.addEventListener('blur', onBlur, { once: true });
 
                     try{
+                        alert("This is an alert before opening deep link!");
                         window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;                        
+                        alert("This is an alert after opening deep link!");
                     }
                     catch{
                         console.error('Deep link navigation failed');
@@ -124,11 +126,16 @@
                     window.removeEventListener('pagehide', onPageHide);
 //                    window.removeEventListener('blur', onBlur);
 
+                    alert("This is an alert before checking for openedApp(before opening play store link)!");
+
                     if (openedApp) { //link is already opened in the app. No need to redirect to App Store
                         return;
                     }
 
+                    alert("This is an alert after checking for openedApp(before opening play store link)!");
+
                     window.location = playStoreUrl;
+                    alert("This is an alert after opening play store link!");
                 },2000);
             } else if (isIOS()) {
                 // ssr - iosAppId need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.

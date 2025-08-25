@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,10 +51,9 @@
 		}
 	</style>
 </head>
-
 <body>
-	<script type="module">
-		(function() {
+<script type="module">
+    (function() {
         // Device detection functions
         function isAndroid() {
             return /Android/i.test(navigator.userAgent);
@@ -68,128 +69,101 @@
             return (typeof window !== "undefined" && typeof document !== "undefined");
         }
 
+        function openAppOrStore({appOpenCustomSchema, storeUrl, storeAutoOpenBlockCondition, clipboardData}) {
+            let openedApp = false;
+            const onVis = () => {
+                if (document.visibilityState === 'hidden') openedApp = true;
+            };
+
+            const onPageHide = () => {
+                openedApp = true;
+            };
+
+            document.addEventListener('visibilitychange', onVis, { once: true });
+            window.addEventListener('pagehide', onPageHide, { once: true });
+
+            window.location = appOpenCustomSchema;                        
+
+            window.setTimeout(function(){
+
+                document.removeEventListener('visibilitychange', onVis);
+                window.removeEventListener('pagehide', onPageHide);
+
+                //link is already opened in the app or it is a facebook WV. No need to redirect to App Store.
+                if (openedApp || storeAutoOpenBlockCondition) { 
+                    return;
+                }
+
+                if (clipboardData) {
+                    navigator.clipboard.writeText(clipboardData).catch(err => console.warn('Clipboard write failed:', err));
+                }
+
+                window.location = storeUrl;
+            },2000);
+        }
+
         window.setTimeout(function () {
             // Redirect logic
             if (isAndroid()) {
-                // ssr - androidPackageName need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
+                // ssr - ANDROID_PACKAGE_NAME, APP_CUSTOM_SCHEMA and FULL_URL  need to be configured as pillar varaibles of deeplink service.
+
                 const androidPackageName = 'com.astro.astro'; // <-- Replace with your Android app's package name
                 const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod` // <-- full url
                 const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackageName}&referrer=${encodeURIComponent(referrer)}`;
+
+				const appCustomSchema = 'pastrostagingdeeplink';
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+				const playstoreAutoOpenBlockCondition = ((userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || false); // default value for BLOCK_AUTO_OPEN_PLAY_STORE_CONDITION is (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1)
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
                 const reasonText = document.createElement('p');
                 reasonText.classList.add('text');
-                // ssr - the text and styling need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
                 reasonText.textContent = 'Open app in Play Store?';
                 divElement.appendChild(reasonText);
                 document.body.appendChild(divElement);
 
                 const agreeButton = document.createElement('button');
-                // ssr - Same as text. The button styling, title need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
                 agreeButton.textContent = 'OPEN';
                 agreeButton.onclick = function() {
                     window.location = playStoreUrl;
                 }
                 document.body.appendChild(agreeButton);
 
-                let openedApp = false;
-                const onVis = () => {
-                    if (document.visibilityState === 'hidden') openedApp = true;
-                };
-
-                const onPageHide = () => {
-                    openedApp = true;
-                };
-
-                // const onBlur = () => {
-                //     openedApp = true;
-                // };
-
-                document.addEventListener('visibilitychange', onVis, { once: true });
-                window.addEventListener('pagehide', onPageHide, { once: true });
-//                    window.addEventListener('blur', onBlur, { once: true });
-
-                window.location = `synaottlink521993797://${encodeURIComponent(referrer)}`;                        
-
-                window.setTimeout(function(){
-                    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-                    document.removeEventListener('visibilitychange', onVis);
-                    window.removeEventListener('pagehide', onPageHide);
-//                    window.removeEventListener('blur', onBlur);
-
-                    //link is already opened in the app or it is a facebook WV. No need to redirect to App Store
-                    if (openedApp || (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1)) { 
-                        return;
-                    }
-
-                    window.location = playStoreUrl;
-                },2000);
+                openAppOrStore({
+                    appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+                    storeUrl: playStoreUrl,
+                    storeAutoOpenBlockCondition: playstoreAutoOpenBlockCondition,
+                    clipboardData: null
+                });
             } else if (isIOS()) {
-                // ssr - iosAppId need to take the value from a pillat varaible. Template it or inform Ilay to take care of the same.
+                // ssr - IOS_APP_STORE_ID, APP_CUSTOM_SCHEMA and FULL_URL need to be configured as pillar varaibles of deeplink service.
+				const appCustomSchema = 'pastrostagingdeeplink';
+
                 const iosAppId = '521993797'; // <-- Replace with your iOS app's App Store ID
                 const appStoreUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
                 const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod`; // `${referrer}` // <-- full url
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+				const appstoreAutoOpenBlockCondition = (false || false); // default value for BLOCK_AUTO_OPEN_APP_STORE_CONDITION is false
+
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
                 const reasonText = document.createElement('p');
                 reasonText.classList.add('text');
-                // ssr - the text and styling need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
                 reasonText.textContent = 'Open link in app?';
                 divElement.appendChild(reasonText);
                 document.body.appendChild(divElement);
 
                 const agreeButton = document.createElement('button');
-                // ssr - Same as text. The button styling, title need to be redone to match Astro requirement. Ask Bindiya for the UI definition.
                 agreeButton.textContent = 'OPEN';
                 agreeButton.onclick = function() {
-                    // Redirect to the App Store and write to clipboard
-                    navigator.clipboard.writeText(`referrer=${encodeURIComponent(referrer)}`)
-                        .then(() => {
-                            console.log(`Written to device clipboard - referrer=${encodeURIComponent(referrer)}`);
-                        })
-                        .catch(err => {
-                            console.error('Failed to write to clipboard:', err);
-                        });
-
-                    let openedApp = false;
-                    let triedToOpenApp = false;
-                    let tryingToOpenAppStore = false;
-
-                    const onVis = () => {
-                        if (document.visibilityState === 'hidden') openedApp = true;
-                    };
-
-                    const onPageHide = () => {
-                        openedApp = true;
-                    };
-
-                    const onBlur = () => {
-                        // when I get blur event while trying to open the app then it means the app is installed
-                        // otherwise, blur is invoked when the code tries to open the app store.
-                        if (triedToOpenApp == false) openedApp = true;
-                    };
-
-                    document.addEventListener('visibilitychange', onVis, { once: true });
-                    window.addEventListener('pagehide', onPageHide, { once: true });
-                    window.addEventListener('blur', onBlur, { once: true });
-
-                    window.location = `synaottlink${iosAppId}://${encodeURIComponent(referrer)}`;                        
-                    triedToOpenApp = true;
-
-                    window.setTimeout(function(){
-                        document.removeEventListener('visibilitychange', onVis);
-                        window.removeEventListener('pagehide', onPageHide);
-                        window.removeEventListener('blur', onBlur);
-                        
-                        if (openedApp) { //link is already opened in the app. No need to redirect to App Store
-                            return;
-                        }
-
-                        window.location = appStoreUrl;
-                    },2000);
+                    openAppOrStore({
+                        appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+                        storeUrl: appStoreUrl,
+                        storeAutoOpenBlockCondition: appstoreAutoOpenBlockCondition,
+                        clipboardData: `referrer=${encodeURIComponent(referrer)}`
+                    });
                 };
                 document.body.appendChild(agreeButton);
             } else if (isBrowser()) {
@@ -204,5 +178,4 @@
 
 </script>
 </body>
-
 </html>

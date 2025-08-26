@@ -12,6 +12,12 @@
 	<meta property='og:url'
 		content='https://links-astrostgeks.vsscloud-astro-stg.tv.s3.ap-southeast-1.amazonaws.com/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod' />
 
+    <meta property='al:android:package' content='com.astro.astro' />
+    <meta property='al:android:url' content='https://links-astrostgeks.vsscloud-astro-stg.tv.s3.ap-southeast-1.amazonaws.com/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod' />
+    <meta property='al:ios:url' content='https://links-astrostgeks.vsscloud-astro-stg.tv.s3.ap-southeast-1.amazonaws.com/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod' />
+    <meta property='al:web:should_fallback' content='true' />
+    <meta property='al:web:url' content='https://web.astro-stg.com/campaign_management?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod' />
+
 	<style>
 		body {
 			position: relative;
@@ -85,7 +91,6 @@
             window.location = appOpenCustomSchema;                        
 
             window.setTimeout(function(){
-
                 document.removeEventListener('visibilitychange', onVis);
                 window.removeEventListener('pagehide', onPageHide);
 
@@ -104,10 +109,10 @@
                 // ssr - ANDROID_PACKAGE_NAME, APP_CUSTOM_SCHEMA and FULL_URL  need to be configured as pillar varaibles of deeplink service.
 
                 const androidPackageName = 'com.astro.astro'; // <-- Replace with your Android app's package name
+				const appCustomSchema = 'pastrostagingdeeplink';
                 const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod` // <-- full url
                 const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackageName}&referrer=${encodeURIComponent(referrer)}`;
 
-				const appCustomSchema = 'pastrostagingdeeplink';
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 				const playstoreAutoOpenBlockCondition = ((userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || false); // default value for BLOCK_AUTO_OPEN_PLAY_STORE_CONDITION is (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1)
 
@@ -133,14 +138,12 @@
                 });
             } else if (isIOS()) {
                 // ssr - IOS_APP_STORE_ID, APP_CUSTOM_SCHEMA and FULL_URL need to be configured as pillar varaibles of deeplink service.
-				const appCustomSchema = 'pastrostagingdeeplink';
-
                 const iosAppId = '521993797'; // <-- Replace with your iOS app's App Store ID
+				const appCustomSchema = 'pastrostagingdeeplink';
                 const appStoreUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
                 const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod`; // `${referrer}` // <-- full url
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 				const appstoreAutoOpenBlockCondition = (false || false); // default value for BLOCK_AUTO_OPEN_APP_STORE_CONDITION is false
-
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
@@ -153,7 +156,7 @@
                 const agreeButton = document.createElement('button');
                 agreeButton.textContent = 'OPEN';
                 agreeButton.onclick = function() {
-                    // Redirect to the App Store and write to clipboard
+				    // Write to clipboard and redirect to app or the app store(NOTE: writting to clipboard fails in the timer method, within openAppOrStore method).
                     navigator.clipboard.writeText(`referrer=${encodeURIComponent(referrer)}`)
                         .then(() => {
                             console.log(`Written to device clipboard - referrer=${encodeURIComponent(referrer)}`);
@@ -171,7 +174,7 @@
                 document.body.appendChild(agreeButton);
             } else if (isBrowser()) {
                 // For desktop
-                const desktopFallback = `https://web.astro-stg.com/campaign_management?`; // <-- Replace with Web UI host and query params from the full URL
+                const desktopFallback = `https://web.astro-stg.com/campaign_management?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod`; // <-- Replace with Web UI host and query params from the full URL
                 window.location = desktopFallback;
             } else {
                 document.body.innerHTML = '<p>This link is intended for Android or iOS device or Chrome, Firefox and Safari web browsers. Please open it on a compatible device.</p>';

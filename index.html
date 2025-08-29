@@ -137,7 +137,8 @@
                 document.body.appendChild(agreeButton);
 
                 openAppOrStore({
-                    appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+//                    appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+                    appOpenCustomSchema: `intent://#Intent;scheme=${appCustomSchema};package=${androidPackageName};S.extras=${encodeURIComponent(referrer)};end`,
                     storeUrl: playStoreUrl,
                     storeAutoOpenBlockCondition: playstoreAutoOpenBlockCondition
                 });

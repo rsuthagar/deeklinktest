@@ -75,7 +75,7 @@
             return (typeof window !== "undefined" && typeof document !== "undefined");
         }
 
-        function openAppOrStore({appOpenCustomSchema, storeUrl, storeAutoOpenBlockCondition}) {
+        function openAppOrStore({appOpenCustomSchema, storeUrl}) {
             let openedApp = false;
             const onVis = () => {
                 if (document.visibilityState === 'hidden') openedApp = true;
@@ -88,6 +88,7 @@
             document.addEventListener('visibilitychange', onVis, { once: true });
             window.addEventListener('pagehide', onPageHide, { once: true });
 
+            //open the app with a custom schema. Note: It is required only on Facebook and Instafram apps which uses embedded webview.
             try{
                 window.location = appOpenCustomSchema;
             }
@@ -100,7 +101,7 @@
                 window.removeEventListener('pagehide', onPageHide);
 
                 //link is already opened in the app or it is a facebook WV. No need to redirect to App Store.
-                if (openedApp || storeAutoOpenBlockCondition) { 
+                if (openedApp) { 
                     return;
                 }
 
@@ -119,7 +120,9 @@
                 const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackageName}&referrer=${encodeURIComponent(referrer)}`;
 
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-				const playstoreAutoOpenBlockCondition = ((userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || false); // default value for BLOCK_AUTO_OPEN_PLAY_STORE_CONDITION is (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1)
+				const playstoreAutoOpenBlockCondition = ( (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || 
+                                                            (userAgent.indexOf("Instagram") > -1 && userAgent.indexOf("wv") > -1) || 
+                                                            false ); // default value for BLOCK_AUTO_OPEN_PLAY_STORE_CONDITION is (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1)
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
@@ -136,12 +139,20 @@
                 }
                 document.body.appendChild(agreeButton);
 
-                openAppOrStore({
-//                    appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
-                    appOpenCustomSchema: `intent://#Intent;scheme=${appCustomSchema};package=${androidPackageName};S.extras=${encodeURIComponent(referrer)};end`,
-                    storeUrl: playStoreUrl,
-                    storeAutoOpenBlockCondition: playstoreAutoOpenBlockCondition
-                });
+
+                // try to open the app using the custom schema only for Facebook and Insta as their embedded webview blocks OS from automatically opening the OTT app if installed.
+                // For other browsers, directly redirect to Play Store as OS would have launched the OTT app if it is already installed. 
+                if( (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || 
+                    (userAgent.indexOf("Instagram") > -1 && userAgent.indexOf("wv") > -1))
+                {
+                    openAppOrStore({
+                        appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+// secured way of launching custom schema                       appOpenCustomSchema: `intent://#Intent;scheme=${appCustomSchema};package=${androidPackageName};S.extras=${encodeURIComponent(referrer)};end`,
+                        storeUrl: playStoreUrl,
+                    });
+                } else {
+                    window.location = playStoreUrl;
+                }
             } else if (isIOS()) {
                 // ssr - IOS_APP_STORE_ID, APP_CUSTOM_SCHEMA and FULL_URL need to be configured as pillar varaibles of deeplink service.
                 const iosAppId = '521993797'; // <-- Replace with your iOS app's App Store ID
@@ -149,7 +160,6 @@
                 const appStoreUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
                 const referrer = `https://links-astrostgeks.vsscloud-astro-stg.tv/content/36ed2348-26e6-5fd7-a296-230bb038d017~CATC0000000001014675~vod?contentType=content&utm_source=clevertap&utm_medium=post&utm_campaign=Astro&target=actionMenu&socialTitle=My+Chemical+Romance_Cancer&socialDescription=Short+Synopsis+-+English&socialImageLink=http%3A%2F%2Fstaging-vod-poster.astro.com.my%2Fposter%2FIVP%28STB_OTT_STV%29_Idiot_IVP_LAND_917x516_F7B93_20241129_105743.jpg&contentId=36ed2348-26e6-5fd7-a296-230bb038d017%7ECATC0000000001014675%7Evod`; // `${referrer}` // <-- full url
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-				const appstoreAutoOpenBlockCondition = (false || false); // default value for BLOCK_AUTO_OPEN_APP_STORE_CONDITION is false
 
                 const divElement = document.createElement('div');
                 divElement.classList.add('text-container');
@@ -174,7 +184,6 @@
                     openAppOrStore({
                         appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
                         storeUrl: appStoreUrl,
-                        storeAutoOpenBlockCondition: appstoreAutoOpenBlockCondition
                     });
                 };
                 document.body.appendChild(agreeButton);

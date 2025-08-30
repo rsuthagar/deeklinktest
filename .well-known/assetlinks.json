@@ -1,0 +1,15 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.astro.astro",
+            "sha256_cert_fingerprints": [
+                "A5:29:B9:10:57:70:AC:43:BA:CA:32:85:3B:FA:D3:DF:7B:94:B0:3F:83:7F:6A:27:C1:41:B2:7E:6F:14:EB:21",
+                "08:CD:43:C3:3F:C9:53:5B:07:08:74:F3:61:41:6C:82:B6:28:9F:3C:9E:8A:E6:AF:22:0A:AF:50:63:2E:4D:75"
+            ]
+        }
+    }
+]

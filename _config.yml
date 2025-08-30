@@ -1,4 +1,4 @@
-title: ssr deeplink Jekyll Site
+title: "ssr deeplink Jekyll Site"
 description: "A description for the site"
 theme: jekyll-theme-minimal
 include: [".well-known"]

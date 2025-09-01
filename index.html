@@ -145,11 +145,13 @@
                 if( (userAgent.indexOf("FBAV") > -1 || userAgent.indexOf("FB_IAB") > -1) || 
                     (userAgent.indexOf("Instagram") > -1 && userAgent.indexOf("wv") > -1))
                 {
-                    openAppOrStore({
-                        appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
-// secured way of launching custom schema                       appOpenCustomSchema: `intent://#Intent;scheme=${appCustomSchema};package=${androidPackageName};S.extras=${encodeURIComponent(referrer)};end`,
-                        storeUrl: playStoreUrl,
-                    });
+                    window.location = `${appCustomSchema}://${encodeURIComponent(referrer)}`;
+
+//                     openAppOrStore({
+//                         appOpenCustomSchema: `${appCustomSchema}://${encodeURIComponent(referrer)}`,
+// // secured way of launching custom schema                       appOpenCustomSchema: `intent://#Intent;scheme=${appCustomSchema};package=${androidPackageName};S.extras=${encodeURIComponent(referrer)};end`,
+//                         storeUrl: playStoreUrl,
+//                     });
                 } else {
                     window.location = playStoreUrl;
                 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" availabilityStartTime="2015-01-01T00:00:00Z" publishTime="2026-03-05T04:22:26.405101Z" minimumUpdatePeriod="PT2S" minBufferTime="PT1S" timeShiftBufferDepth="PT1M1S" maxSegmentDuration="PT2S">
+  <ServiceDescription id="0">
+    <Latency min="2000" max="4000" target="3000" />
+    <PlaybackRate min="0.95" max="1.05" />
+  </ServiceDescription>
+  <Period id="period_350226927000000" start="PT97285H15M27S">
+    <AdaptationSet id="1" group="1" mimeType="audio/mp4" lang="ads" contentType="audio" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate timescale="10000000" presentationTimeOffset="3502269270000000" availabilityTimeOffset="1.803" availabilityTimeComplete="false" duration="20020000" startNumber="174938525" initialization="TVGLOBORJLL-$RepresentationID$-p=350226927000000-init.mp4" media="TVGLOBORJLL-$RepresentationID$-p=350226927000000-$Number$.m4s" />
+      <Representation id="mp4a_106400_ads=20005" bandwidth="106400" audioSamplingRate="48000" codecs="mp4a.40.2">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2" />
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="2" group="1" mimeType="audio/mp4" lang="en" contentType="audio" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate timescale="10000000" presentationTimeOffset="3502269270000000" availabilityTimeOffset="1.803" availabilityTimeComplete="false" duration="20020000" startNumber="174938525" initialization="TVGLOBORJLL-$RepresentationID$-p=350226927000000-init.mp4" media="TVGLOBORJLL-$RepresentationID$-p=350226927000000-$Number$.m4s" />
+      <Representation id="mp4a_106400_eng=20003" bandwidth="106400" audioSamplingRate="48000" codecs="mp4a.40.2">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2" />
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="3" group="1" mimeType="audio/mp4" lang="pt" contentType="audio" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate timescale="10000000" presentationTimeOffset="3502269270000000" availabilityTimeOffset="1.803" availabilityTimeComplete="false" duration="20020000" startNumber="174938525" initialization="TVGLOBORJLL-$RepresentationID$-p=350226927000000-init.mp4" media="TVGLOBORJLL-$RepresentationID$-p=350226927000000-$Number$.m4s" />
+      <Representation id="mp4a_106400_por=20004" bandwidth="106400" audioSamplingRate="48000" codecs="mp4a.40.2">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2" />
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="4" group="2" frameRate="30000/1001" mimeType="video/mp4" startWithSAP="1" contentType="video" par="16:9" minBandwidth="3000000" maxBandwidth="5000000" minWidth="1280" maxWidth="1920" minHeight="720" maxHeight="1080" segmentAlignment="true">
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
+      <SegmentTemplate timescale="10000000" presentationTimeOffset="3502269270000000" availabilityTimeOffset="1.802" availabilityTimeComplete="false" duration="20020000" startNumber="174938525" initialization="TVGLOBORJLL-$RepresentationID$-p=350226927000000-init.mp4" media="TVGLOBORJLL-$RepresentationID$-p=350226927000000-$Number$.m4s" />
+      <Representation id="avc1_3000000=10000" bandwidth="3000000" width="1280" height="720" sar="1:1" codecs="avc1.4d0029" />
+      <Representation id="avc1_5000000=10001" bandwidth="5000000" width="1920" height="1080" sar="1:1" codecs="avc1.4d0029" />
+    </AdaptationSet>
+  </Period>
+  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-iso:2014" value="https://time.akamai.com/?iso" />
+</MPD>
